@@ -61,22 +61,23 @@ def any_bungee_solver(y0,tmax,argz):
     third:
         array (k, l, m, c_1, c_2): All the arguments needed for modeling the jump, see bungee() for details!
     """
+    warnings = []
     if y0[0] < 0:
-        print("WARNING: negative jump height, setting to 80m by default!")
+        warnings.append("WARNING: Negative jump height, setting to 80m")
         y0[0] = 80
     if tmax < 0:
-        print("WARNING: time must be positive, setting to 20s by default!")
+        warnings.append("WARNING: Time must be positive, setting to 20s")
         tmax = 20
     arg_list = list(argz)
     arg_list[1] = y0[0]-arg_list[1]
     if arg_list[1] > y0[0]:
-        print("WARNING: negative bungee length, setting to 20m by default!")
+        warnings.append("WARNING: Negative bungee length, setting to 20m")
         arg_list[1] = 20
     if arg_list[0] < 0:
-        print("WARNING: negative k value, setting to 100 by default!")
+        warnings.append("WARNING: Negative k value, setting to 100N\m")
         arg_list[0] = 100
     if arg_list[2] < 0:
-        print("WARNING: negative mass, setting to 100kg by default!")
+        warnings.append("WARNING: Negative mass, setting to 100kg")
         arg_list[2] = 100
     argz = tuple(arg_list
                 )
@@ -85,17 +86,18 @@ def any_bungee_solver(y0,tmax,argz):
     if any(i <= 0 for i in sol[:,0]):
         y_ground = [0,0]
         impact_index = np.argmax(sol[:,0]<0)
-        print("OUTCOME: The jumper has hit the ground")
         sol_crash =  odeint(bungee, y_ground, t, args=argz)
         if all(i <= 0 for i in sol_crash[:,1]):
-            print(f'OUTCOME: The jumper hit the ground after {impact_index*t[1]:.2f}')
+            warnings.append(f'OUTCOME: The jumper hit the ground after {impact_index*t[1]:.2f} seconds')
             sol_crash[:,1] = 0
-            print(f'WARNING: Velocity is set to 0 beyond {impact_index*t[1]:.2f} seconds\nREASON: l value was set too high')
+            warnings.append(f'WARNING: Velocity is set to 0 beyond {impact_index*t[1]:.2f} seconds')
+            warnings.append('REASON: l value was set too high')
         else:
-            print(f'OUTCOME: The jumper hit the ground after {impact_index*t[1]:.2f} seconds\nREASON: k value was set too low')
+            warnings.append(f'OUTCOME: The jumper hit the ground after {impact_index*t[1]:.2f} seconds')
+            warnings.append('REASON: k value was set too low')
         final_sol = np.concatenate((sol[:impact_index,:],sol_crash[:-impact_index,:]))
     else:
-        print("OUTCOME: They had a lot of fun")
+        warnings.append("OUTCOME: A safe bungee jump happened")
         final_sol = sol
 
     fig, ax1 = plt.subplots( figsize = (10,6))
@@ -135,4 +137,4 @@ def any_bungee_solver(y0,tmax,argz):
     plt.savefig(fig)
     plt.close()
     fig = f'../{fig}'
-    return fig    
+    return fig, warnings    

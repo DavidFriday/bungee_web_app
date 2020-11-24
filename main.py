@@ -28,12 +28,14 @@ def index():
         int(form.jumper_mass.data)
         if request.method == 'POST' and form.validate():
             bungee_arguments = (form.k.data, form.bungee_length.data, form.jumper_mass.data, 1,1)
-            result = any_bungee_solver([form.starting_height.data, 0],
+            result, out= any_bungee_solver([form.starting_height.data, 0],
                                         form.time.data,
                                         bungee_arguments)
         else:
             result = None
-        return render_template('bungee.html', form=form, result=result)
+            out = None
+        return render_template('bungee.html', form=form, result=result, out=out)
     except:
         result = None
-        return render_template('bungee.html', form=form, result=result)
+        out = None
+        return render_template('bungee.html', form=form, result=result, out=out)
