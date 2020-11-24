@@ -1,0 +1,23 @@
+<h1>Bungee Jump checker</h1>
+<p>ODE path generator for the P3 bungee jump assignment</p>
+<form method=post action="">
+
+<table>
+  {% for field in form %}
+    <tr>
+    <td>{{ field.name }}</td><td>{{ field }}</td>
+    <td>{{ field.label }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<p><input type=submit value=Generate></form></p>
+
+<p>
+{% if result != None %}
+<img src="{{ result }}" width=700>
+{% endif %}
+</p>
+
+<p>please don't tell me about any bugs, I know they're there but</p>
+<p>I'm pretending they're not my problem!</p>
