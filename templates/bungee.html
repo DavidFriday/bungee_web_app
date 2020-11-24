@@ -1,4 +1,4 @@
-<h1>Bungee Jump checker</h1>
+<h1>Bungee Jump Checker</h1>
 <p>ODE path generator for the P3 bungee jump assignment</p>
 <form method=post action="">
 
@@ -13,11 +13,16 @@
 
 <p><input type=submit value=Generate></form></p>
 
-<p>
+<p style="color:red;">
 {% if result != None %}
-<img src="{{ result }}" width=700>
+<img src="{{ result }}" width=700><br>
+{% endif %}
+{% if out != None %}
+{% for para in out %}
+{{para}}<br>
+{% endfor %}
 {% endif %}
 </p>
 
-<p>please don't tell me about any bugs, I know they're there but</p>
-<p>I'm pretending they're not my problem!</p>
+<p>please don't tell me about any bugs, I know they're there but <br>
+I'm pretending they're not my problem!</p>
